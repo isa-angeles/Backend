@@ -11,18 +11,19 @@ dotenv.config({ path: './env/.env' });
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.URLFRONTEND || 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
 app.use(session({
-    secret: 'secret',
+    secret: process.env.SECRETSESSION || 'secret',
     resave: true,
     saveUninitialized: true,
+    proxy: process.env.NODE_ENV === 'production',
     cookie: {
         httpOnly: true,
-        secure: false, 
-        sameSite: 'lax' 
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'none' 
     }
 }));
 

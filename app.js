@@ -5,7 +5,7 @@ const session = require('express-session');
 
 // Inicializar Express
 const app = express();
-
+mysql://root:DaCKzDrsEBrgMDAVsTpusfCMIOMPclRQ@autorack.proxy.rlwy.net:29937/railway
 // Configuraciones básicas
 dotenv.config({ path: './env/.env' });
 app.use(express.urlencoded({ extended: false }));
@@ -34,6 +34,6 @@ app.use('/api', require('./routes/user'));
 app.use('/api', require('./routes/logout'));
 
 // Servidor
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('El servidor se está ejecutando en http://localhost:3000');
 });

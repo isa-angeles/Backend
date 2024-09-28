@@ -2,10 +2,11 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 
 // Inicializar Express
 const app = express();
-mysql://root:DaCKzDrsEBrgMDAVsTpusfCMIOMPclRQ@autorack.proxy.rlwy.net:29937/railway
+
 // Configuraciones básicas
 dotenv.config({ path: './env/.env' });
 app.use(express.urlencoded({ extended: false }));
@@ -15,15 +16,25 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
+
+// Configuración de almacenamiento de sesiones en MySQL
+const sessionStore = new MySQLStore({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT
+});
+
 app.use(session({
     secret: process.env.SECRETSESSION || 'secret',
-    resave: true,
-    saveUninitialized: true,
-    proxy: process.env.NODE_ENV === 'production',
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
     cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', 
-        sameSite: 'none' 
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none'
     }
 }));
 
@@ -35,5 +46,5 @@ app.use('/api', require('./routes/logout'));
 
 // Servidor
 app.listen(process.env.PORT || 3000, () => {
-    console.log('El servidor se está ejecutando en http://localhost:3000');
+    console.log(`El servidor se está ejecutando en http://localhost:${process.env.PORT || 3000}`);
 });

@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
+const connection = require('../db');
 
 // Inicializar Express
 const app = express();
